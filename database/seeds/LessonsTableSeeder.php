@@ -1,6 +1,6 @@
 <?php
 
-use App\Lesson;
+use App\Models\Lesson;
 use Illuminate\Database\Seeder;
 
 class LessonsTableSeeder extends Seeder

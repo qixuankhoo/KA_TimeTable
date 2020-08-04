@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyLessonRequest;
 use App\Http\Requests\StoreLessonRequest;
 use App\Http\Requests\UpdateLessonRequest;
-use App\Lesson;
-use App\SchoolClass;
-use App\User;
+use App\Models\Lesson;
+use App\Models\Teacher;
+use App\Models\Student;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ class LessonsController extends Controller
     {
         abort_if(Gate::denies('lesson_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $lessons = Lesson::all();
+        $lessons = Lesson::with(['teacher', 'student'])->get();
 
         return view('admin.lessons.index', compact('lessons'));
     }
@@ -28,11 +28,15 @@ class LessonsController extends Controller
     {
         abort_if(Gate::denies('lesson_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $classes = SchoolClass::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $teachers = Teacher::all()->pluck('preferred_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $teachers = User::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $students = Student::all()->pluck('full_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.lessons.create', compact('classes', 'teachers'));
+        $descriptions = config('app.lesson_description');
+
+        $days = Lesson::DAYS;
+
+        return view('admin.lessons.create', compact('teachers', 'students', 'descriptions', 'days'));
     }
 
     public function store(StoreLessonRequest $request)
@@ -46,13 +50,17 @@ class LessonsController extends Controller
     {
         abort_if(Gate::denies('lesson_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $classes = SchoolClass::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $students = Student::all()->pluck('full_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $teachers = User::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $teachers = Teacher::all()->pluck('preferred_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $lesson->load('class', 'teacher');
+        $descriptions = config('app.lesson_description');
 
-        return view('admin.lessons.edit', compact('classes', 'teachers', 'lesson'));
+        $days = Lesson::DAYS;
+
+        $lesson->load('student', 'teacher');
+
+        return view('admin.lessons.edit', compact('students', 'teachers', 'lesson', 'descriptions', 'days'));
     }
 
     public function update(UpdateLessonRequest $request, Lesson $lesson)
@@ -66,7 +74,7 @@ class LessonsController extends Controller
     {
         abort_if(Gate::denies('lesson_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $lesson->load('class', 'teacher');
+        $lesson->load('student', 'teacher');
 
         return view('admin.lessons.show', compact('lesson'));
     }

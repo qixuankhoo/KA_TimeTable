@@ -6,7 +6,7 @@ Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route($routeName)->with('status', session('status'));
     }
-
+    
     return redirect()->route($routeName);
 });
 
@@ -35,5 +35,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('school-classes/destroy', 'SchoolClassesController@massDestroy')->name('school-classes.massDestroy');
     Route::resource('school-classes', 'SchoolClassesController');
 
-    Route::get('calendar', 'CalendarController@index')->name('calendar.index');
+    // Calendar
+    Route::resource('calendar', 'CalendarController');
 });

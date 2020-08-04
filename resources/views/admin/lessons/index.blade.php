@@ -26,13 +26,16 @@
                             {{ trans('cruds.lesson.fields.id') }}
                         </th>
                         <th>
-                            {{ trans('cruds.lesson.fields.class') }}
+                            {{ trans('cruds.lesson.fields.description') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.lesson.fields.student') }}
                         </th>
                         <th>
                             {{ trans('cruds.lesson.fields.teacher') }}
                         </th>
                         <th>
-                            {{ trans('cruds.lesson.fields.weekday') }}
+                            {{ trans('cruds.lesson.fields.day') }}
                         </th>
                         <th>
                             {{ trans('cruds.lesson.fields.start_time') }}
@@ -55,13 +58,16 @@
                                 {{ $lesson->id ?? '' }}
                             </td>
                             <td>
-                                {{ $lesson->class->name ?? '' }}
+                                {{ $lesson->description ?? '' }}
                             </td>
                             <td>
-                                {{ $lesson->teacher->name ?? '' }}
+                                {{ $lesson->student->full_name ?? '' }}
                             </td>
                             <td>
-                                {{ $lesson->weekday ?? '' }}
+                                {{ $lesson->teacher->known_as ?? '' }}
+                            </td>
+                            <td>
+                                {{ $lesson->day ?? '' }}
                             </td>
                             <td>
                                 {{ $lesson->start_time ?? '' }}

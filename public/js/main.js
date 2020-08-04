@@ -40,7 +40,7 @@ $(document).ready(function () {
 
   $('.lesson-timepicker').datetimepicker({
     format: 'HH:mm',
-    stepping: 30,
+    stepping: 5,
     icons: {
       up: 'fas fa-chevron-up',
       down: 'fas fa-chevron-down',

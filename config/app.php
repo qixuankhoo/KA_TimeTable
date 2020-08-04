@@ -231,7 +231,16 @@ return [
     ],
 
     'calendar' => [
-        'start_time'    => '08:00',
-        'end_time'      => '18:00',
+        'start_time'    => '09:00',
+        'end_time'      => '22:00',
+    ],
+
+    'lesson_description' => [
+        'piano',
+        'violin',
+        'viola',
+        'cello',
+        'guitar',
+        'drums'
     ],
 ];

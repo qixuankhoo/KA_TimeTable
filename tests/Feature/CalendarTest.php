@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Lesson;
-use App\Role;
-use App\SchoolClass;
-use App\User;
+use App\Models\Lesson;
+use App\Models\Role;
+;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

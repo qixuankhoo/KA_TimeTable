@@ -31,7 +31,7 @@
                             {{ trans('cruds.lesson.fields.teacher') }}
                         </th>
                         <th>
-                            {{ trans('cruds.lesson.fields.weekday') }}
+                            {{ trans('cruds.lesson.fields.day') }}
                         </th>
                         <th>
                             {{ trans('cruds.lesson.fields.start_time') }}

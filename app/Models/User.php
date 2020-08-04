@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Carbon\Carbon;
 use Hash;
@@ -30,7 +30,7 @@ class User extends Authenticatable
     ];
 
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
         'class_id',
@@ -40,6 +40,21 @@ class User extends Authenticatable
         'remember_token',
         'email_verified_at',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class, 'user_id');
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'user_id');
+    }
 
     public function getIsAdminAttribute()
     {
@@ -54,11 +69,6 @@ class User extends Authenticatable
     public function getIsStudentAttribute()
     {
         return $this->roles()->where('id', 4)->exists();
-    }
-
-    public function teacherLessons()
-    {
-        return $this->hasMany(Lesson::class, 'teacher_id', 'id');
     }
 
     public function getEmailVerifiedAtAttribute($value)
@@ -81,15 +91,5 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token));
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
-    function class()
-    {
-        return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Lesson;
+use App\Models\Lesson;
 use App\Rules\LessonTimeAvailabilityRule;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,25 +20,34 @@ class UpdateLessonRequest extends FormRequest
     public function rules()
     {
         return [
-            'class_id'   => [
+            'student_id'   => [
                 'required',
-                'integer'],
+                'integer'
+            ],
             'teacher_id' => [
                 'required',
-                'integer'],
-            'weekday'    => [
+                'integer'
+            ],
+            'description'    => [
+                'required',
+                'string'
+            ],
+            'day'    => [
                 'required',
                 'integer',
                 'min:1',
-                'max:7'],
+                'max:7'
+            ],
             'start_time' => [
                 'required',
                 new LessonTimeAvailabilityRule($this->route('lesson')->id),
-                'date_format:' . config('panel.lesson_time_format')],
+                'date_format:' . config('panel.lesson_time_format')
+            ],
             'end_time'   => [
                 'required',
                 'after:start_time',
-                'date_format:' . config('panel.lesson_time_format')],
+                'date_format:' . config('panel.lesson_time_format')
+            ],
         ];
     }
 }

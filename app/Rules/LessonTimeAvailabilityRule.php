@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Lesson;
+use App\Models\Lesson;
 use Illuminate\Contracts\Validation\Rule;
 
 class LessonTimeAvailabilityRule implements Rule
@@ -26,7 +26,7 @@ class LessonTimeAvailabilityRule implements Rule
      */
     public function passes($attribute, $value)
     {
-       return Lesson::isTimeAvailable(request()->input('weekday'), $value, request()->input('end_time'), request()->input('class_id'), request()->input('teacher_id'), $this->lesson);
+       return Lesson::isTimeAvailable(request()->input('day'), $value, request()->input('end_time'), request()->input('teacher_id'), request()->input('student_id'), $this->lesson);
     }
 
     /**

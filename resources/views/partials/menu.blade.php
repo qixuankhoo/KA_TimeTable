@@ -1,6 +1,5 @@
 <div class="sidebar">
     <nav class="sidebar-nav">
-
         <ul class="nav">
             <li class="nav-item">
                 <a href="{{ route("admin.home") }}" class="nav-link">
@@ -93,7 +92,7 @@
                     <i class="fa-fw fas fa-calendar nav-icon">
 
                     </i>
-                    Calendar
+                    TimeTable
                 </a>
             </li>
             <li class="nav-item">

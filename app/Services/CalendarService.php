@@ -2,43 +2,35 @@
 
 namespace App\Services;
 
-use App\Lesson;
+use App\Models\Lesson;
 
 class CalendarService
 {
-    public function generateCalendarData($weekDays)
+    public function generateCalendarData($lessons)
     {
+        $dailyStart = config('app.calendar.start_time');
+        $dailyEnd = config('app.calendar.end_time');
+
+       
+        $startTimes = $lessons->pluck('start_time')->toArray();
+        $durations = $lessons->pluck('duration')->toArray();
+        
         $calendarData = [];
-        $timeRange = (new TimeService)->generateTimeRange(config('app.calendar.start_time'), config('app.calendar.end_time'));
-        $lessons   = Lesson::with('class', 'teacher')
-            ->calendarByRoleOrClassId()
-            ->get();
-
-        foreach ($timeRange as $time)
-        {
+        $timeRange = (new TimeService)->generateTimeRange($dailyStart, $dailyEnd, $startTimes, $durations);
+    
+        foreach ($timeRange as $time) {
             $timeText = $time['start'] . ' - ' . $time['end'];
-            $calendarData[$timeText] = [];
+            $lesson = $lessons->where('start_time', $time['start'])->first();
 
-            foreach ($weekDays as $index => $day)
-            {
-                $lesson = $lessons->where('weekday', $index)->where('start_time', $time['start'])->first();
-
-                if ($lesson)
-                {
-                    array_push($calendarData[$timeText], [
-                        'class_name'   => $lesson->class->name,
-                        'teacher_name' => $lesson->teacher->name,
-                        'rowspan'      => $lesson->difference/30 ?? ''
-                    ]);
-                }
-                else if (!$lessons->where('weekday', $index)->where('start_time', '<', $time['start'])->where('end_time', '>=', $time['end'])->count())
-                {
-                    array_push($calendarData[$timeText], 1);
-                }
-                else
-                {
-                    array_push($calendarData[$timeText], 0);
-                }
+            if ($lesson) {
+                $calendarData[$timeText] = [
+                    'student_name' => $lesson->student->full_name,
+                    'lesson_name' => ucfirst($lesson->description),
+                    'grade' => $lesson->grade,
+                    'rowspan'      => $lesson->difference/30 ?? ''
+                ];
+            } else {
+                $calendarData[$timeText] = null;
             }
         }
 
